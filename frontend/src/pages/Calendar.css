@@ -1,0 +1,179 @@
+.tela {
+    display: flex;
+    background-color: #f1f1f1;
+}
+
+.calendario {
+    height: 100vh;
+    width: 80%;
+}
+
+.toolbar {
+    height: 100vh;
+    width: 30%;
+    color: #FFF;
+    border-right: 1px solid #d8d8d8;
+}
+/* HEADER MOD */
+.toolbar-container {
+    display: flex;
+    height: 10vh;
+    align-items: center;
+    padding-left: 50px;
+}
+
+.mesAno {
+    width: 50%;
+    color: #505050;
+    justify-content: flex-start;
+    text-shadow: 1px 1px 0px #ffffff;
+}
+
+.dirTop {
+    width: 50%;
+    justify-content: end;
+    display: flex;
+    align-items: center;
+    padding-right: 50px;
+}
+
+#btn-left,
+.toolbar-navigation {
+    margin-left: 15px;
+} 
+
+#btn-left,
+#btn-right {
+    font-size: 1.5rem;
+    transition: .2s;
+}
+
+#btn-left:hover,
+#btn-right:hover {
+    background-color: #adcaac;
+}
+
+/* Calendario */
+/* Header e botoes */
+.rbc-toolbar {
+    height: 10vh;
+    color:  #BBB;
+    font-size: 25px;
+}
+
+.rbc-btn-group > button {
+    border: 0;
+}
+
+.rbc-toolbar button {
+    color: #CECECE;
+    border: 1px solid #CCCCCC4F;
+}
+
+.rbc-toolbar button:active,
+.rbc-toolbar button.rbc-active {
+    background-color: #56565686;
+    border-color: #BBB;
+}
+
+/* Corpo */
+/* Linhas */
+.rbc-month-view {
+    border-color: #7272725f;
+}
+
+.rbc-month-row + .rbc-month-row{
+    border-color: #aaaaaa73;
+}
+.rbc-day-bg + .rbc-day-bg{
+    border-color: #acacac73
+}
+.rbc-row {
+    overflow: hidden;
+}
+
+.rbc-allday-cell{
+    border-top: solid 1px #b8b8b8a2;
+}
+
+/* Mes */
+.rbc-header {
+    color: #494949;
+    border-color: #bbbbbb73;
+    align-self: center;
+}
+
+.rbc-header + .rbc-header {
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-color: #bebebe73;
+}
+
+.rbc-off-range-bg {
+    background-color: #ebebeb;
+}
+
+.rbc-today {
+    background-color: #f1f1f1;
+}
+
+.rbc-button-link {
+    margin: 5px;
+    font-size: 15px;
+    color: #131313;
+}
+
+.rbc-off-range .rbc-button-link {
+    color: #05050537;
+}
+.rbc-now .rbc-button-link {
+    background-color: #176116;
+    color: #FFF;
+    border-radius: 2px;
+    padding: 0px 3px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+.rbc-event-content {
+    text-shadow: 2px 2px 4px black;
+    font-size: 15px;
+    letter-spacing: -0.5px;
+}
+
+.rbc-time-content,
+.rbc-time-content > .rbc-day-slot,
+.rbc-timeslot-group,
+.rbc-time-slot {
+    color: #3b3b3b;
+    border-color: #81818136;
+}
+
+.rbc-day-slot .rbc-time-slot {
+    border-top: 1px solid #C8C8C80A;
+}
+
+/* Agenda */
+.rbc-agenda-content, 
+.rbc-agenda-view {
+    color: #555555;
+}
+
+.rbc-agenda-date-cell,
+.rbc-agenda-time-cell {
+    background-color: #f1f1f1;
+}
+
+.rbc-agenda-event-cell {
+    border-radius: 20px;
+    font-weight: bold;
+    color: #E0E0E0;
+    cursor: pointer;
+}
+
+.rbc-agenda-empty {
+    margin-left: 4rem;
+    font-size: 1.2rem;
+}
+

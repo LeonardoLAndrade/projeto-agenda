@@ -1,0 +1,27 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000075;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+}
+
+.modal-content {
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 6px;
+    z-index: 5;
+}
+
+.modal-content h2 {
+    margin: 20px 0;
+}
+
+.modal-content p {
+    margin: 16px 0;
+}

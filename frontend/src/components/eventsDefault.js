@@ -1,0 +1,43 @@
+const eventsDefault = [
+  {
+    id: 1,
+    title: "Consulta com Dermatologista - Mateus",
+    start: new Date(2024, 6, 28, 10, 0),
+    end: new Date(2024, 6, 28, 15, 0),
+    desc: "Consulta marcada",
+    color: "#000099",
+    procedimento: "Consulta",
+    especialidade: "Dermatologista",
+    profissional: "Mateus",
+    transport: false,
+    situation: "Pendente",
+  },
+  {
+    id: 2,
+    title: "Cirurgia com Cirurgião - Marcos",
+    start: new Date(2024, 6, 30, 10, 0),
+    end: new Date(2024, 6, 30, 15, 0),
+    desc: "Cirurgia marcada por telefone",
+    color: "#1D591C",
+    procedimento: "Cirurgia",
+    especialidade: "Cirurgião",
+    profissional: "Marcos",
+    transport: true,
+    situation: "Aprovada",
+  },
+  {
+    id: 3,
+    title: "Tratamento com Enfermeiro - Lucas",
+    start: new Date(2024, 6, 18, 15, 0),
+    end: new Date(2024, 6, 18, 16, 0),
+    desc: "Paciente marcou pessoalmente",
+    color: "#FF5900",
+    procedimento: "Tratamento",
+    especialidade: "Enfermeiro",
+    profissional: "Lucas",
+    transport: false,
+    situation: "Pendente",
+  },
+];
+
+export default eventsDefault;
