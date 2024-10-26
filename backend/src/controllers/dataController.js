@@ -1,6 +1,6 @@
 const Especialidade = require("../models/especialidade.js");
 const Procedimento = require("../models/procedimentos.js");
-const Profissional = require("../models/profissional.js");
+const Ag_Profissional = require("../models/ag_profissionais.js");
 const status = require("http-status");
 
 // Relacionamento: Profissional tem muitas Especialidades
@@ -104,11 +104,11 @@ exports.getProcedimentos = (req, res, next) => {
 };
 
 // Método para buscar todos os profissionais
-exports.getProfissionais = (req, res, next) => {
-  Profissional.findAll()
-    .then((profissionais) => {
-      if (profissionais) {
-        res.status(status.OK).send(profissionais);
+exports.getAgProfissionais = (req, res, next) => {
+  Ag_Profissional.findAll()
+    .then((ag_profissionais) => {
+      if (ag_profissionais) {
+        res.status(status.OK).send(ag_profissionais);
       } else {
         res.status(status.NOT_FOUND).send();
       }

@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/database.js");
-const Profissional = require("./profissional.js");
+const Ag_Profissionais = require("./ag_profissionais.js");
 const Procedimentos = require("./procedimentos.js");
 
 const Agenda = sequelize.define(
@@ -24,7 +24,7 @@ const Agenda = sequelize.define(
       allowNull: false,
       type: Sequelize.INTEGER,
       references: {
-        model: "profissionals", // nome da tabela de referência
+        model: "ag_profissionais", // nome da tabela de referência
         key: "id_profissional", // chave primária da tabela de referência
       },
     },
@@ -64,7 +64,7 @@ const Agenda = sequelize.define(
   }
 );
 
-Agenda.belongsTo(Profissional, {
+Agenda.belongsTo(Ag_Profissionais, {
   foreignKey: "id_profissional",
 });
 

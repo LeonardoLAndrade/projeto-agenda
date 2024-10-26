@@ -1,12 +1,13 @@
-import Calendar from "./pages/Calendar";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import Calendar from "./pages/Calendar";
 
 import "./App.css";
-import "react-toastify/dist/ReactToastify.css";
+import "./index.css";
 
 function App() {
   if (process.env.NODE_ENV !== "production") {

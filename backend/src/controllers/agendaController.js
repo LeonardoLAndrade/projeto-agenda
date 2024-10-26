@@ -1,5 +1,5 @@
 const Agenda = require("../models/agenda.js");
-const Profissional = require("../models/profissional.js");
+const Ag_Profissional = require("../models/ag_profissionais.js");
 const Procedimento = require("../models/procedimentos.js");
 const Especialidade = require("../models/especialidade.js");
 const status = require("http-status");
@@ -42,7 +42,7 @@ exports.SearchAll = (req, res, next) => {
   Agenda.findAll({
     include: [
       {
-        model: Profissional,
+        model: Ag_Profissional,
         include: [Especialidade],
       },
       {
@@ -67,7 +67,7 @@ exports.SearchOne = (req, res, next) => {
   Agenda.findByPk(id_agenda, {
     include: [
       {
-        model: Profissional,
+        model: Ag_Profissional,
         include: [Especialidade],
       },
       {
