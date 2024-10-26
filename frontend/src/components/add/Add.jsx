@@ -35,7 +35,7 @@ function Add({ onAdd }) {
       .then((data) => setProcedimentosData(data))
       .catch((error) => console.error("Erro ao buscar procedimentos:", error));
 
-    fetch("http://localhost:3003/sistema/profissionais")
+    fetch("http://localhost:3003/sistema/ag_profissionais")
       .then((response) => response.json())
       .then((data) => setProfissionaisData(data))
       .catch((error) => console.error("Erro ao buscar profissionais:", error));
@@ -234,9 +234,9 @@ function Add({ onAdd }) {
               >
                 Especialidade
               </option>
-              {especialidadesData.map((especialidade) => (
+              {especialidadesData.map((especialidade, index) => (
                 <option
-                  key={especialidade.id_especialidade}
+                  key={especialidade.id_especialidade || index}
                   value={especialidade.id_especialidade}
                 >
                   {especialidade.nome_especialidade}
@@ -256,9 +256,9 @@ function Add({ onAdd }) {
               >
                 Procedimento
               </option>
-              {procedimentosData.map((procedimento) => (
+              {procedimentosData.map((procedimento, index) => (
                 <option
-                  key={procedimento.id_procedimento}
+                  key={procedimento.id_procedimento || index}
                   value={procedimento.id_procedimento}
                 >
                   {procedimento.procedimento}
@@ -280,9 +280,9 @@ function Add({ onAdd }) {
               >
                 Profissional Responsável
               </option>
-              {profissionaisData.map((profissional) => (
+              {profissionaisData.map((profissional, index) => (
                 <option
-                  key={profissional.id_profissional}
+                  key={profissional.id_profissional || index}
                   value={profissional.id_profissional}
                 >
                   {profissional.nome_profissional}

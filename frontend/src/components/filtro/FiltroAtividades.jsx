@@ -7,7 +7,7 @@ function FiltroAtividades({ atividades, selecionarAtividades }) {
 
   useEffect(() => {
     // Fetch profissionais do banco de dados
-    fetch("http://localhost:3003/sistema/profissionais")
+    fetch("http://localhost:3003/sistema/ag_profissionais")
       .then((response) => response.json())
       .then((data) => setProfissionais(data))
       .catch((error) => console.error("Erro ao buscar profissionais:", error));

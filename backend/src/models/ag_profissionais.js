@@ -3,7 +3,7 @@ const sequelize = require("../database/database.js");
 const Especialidade = require("./especialidade.js");
 
 const Profissional = sequelize.define(
-  "profissional",
+  "ag_profissionais",
   {
     id_profissional: {
       allowNull: false,
