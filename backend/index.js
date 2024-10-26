@@ -9,7 +9,8 @@ const cors = require("cors");
 // Importar todos os modelos
 const Especialidade = require("./src/models/especialidade.js");
 const Procedimentos = require("./src/models/procedimentos.js");
-const Profissional = require("./src/models/profissional.js");
+const Ag_Profissionais = require("./src/models/ag_profissionais.js");
+const Profissionais = require("./src/models/profissionais.js");
 const Agenda = require("./src/models/agenda.js");
 
 app.use(express.json());
@@ -36,9 +37,12 @@ const syncDatabase = async () => {
     await Procedimentos.sync({ force: false });
     console.log("Tabela 'procedimentos' sincronizada.");
 
-    // Sincronizar a tabela 'profissional' depois
-    await Profissional.sync({ force: false });
-    console.log("Tabela 'profissional' sincronizada.");
+    // Sincronizar a tabela 'ag_profissionais' depois
+    await Ag_Profissionais.sync({ force: false });
+    console.log("Tabela 'ag_profissionais' sincronizada.");
+
+    await Profissionais.sync({ force: false });
+    console.log("Tabela 'profissionais' sincronizada.");
 
     // Sincronizar a tabela 'agenda' por último
     await Agenda.sync({ force: false });

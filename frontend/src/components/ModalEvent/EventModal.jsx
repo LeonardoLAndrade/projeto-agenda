@@ -45,7 +45,7 @@ const EventModal = ({ event, onClose, onDelete, onUpdate }) => {
     const fetchProfissionais = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3003/sistema/profissionais"
+          "http://localhost:3003/sistema/ag_profissionais"
         );
         const data = await response.json();
         setProfissionais(data);
