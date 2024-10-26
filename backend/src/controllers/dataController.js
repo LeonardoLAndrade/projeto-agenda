@@ -4,29 +4,39 @@ const Ag_Profissional = require("../models/ag_profissionais.js");
 const status = require("http-status");
 
 // Relacionamento: Profissional tem muitas Especialidades
-Profissional.belongsToMany(Especialidade, { through: "ProfissionalEspecialidade" });
-Especialidade.belongsToMany(Profissional, { through: "ProfissionalEspecialidade" });
+Ag_Profissional.belongsToMany(Especialidade, {
+  through: "ProfissionalEspecialidade",
+});
+Especialidade.belongsToMany(Ag_Profissional, {
+  through: "ProfissionalEspecialidade",
+});
 
 // Especialidade tem muitos Procedimentos
-Especialidade.belongsToMany(Procedimento, { through: "EspecialidadeProcedimento" });
-Procedimento.belongsToMany(Especialidade, { through: "EspecialidadeProcedimento" });
-
-
+Especialidade.belongsToMany(Procedimento, {
+  through: "EspecialidadeProcedimento",
+});
+Procedimento.belongsToMany(Especialidade, {
+  through: "EspecialidadeProcedimento",
+});
 
 exports.getProfissionaisPorEspecialidade = (req, res, next) => {
   const especialidadeId = req.params.especialidadeId;
 
-  Especialidade.findByPk(especialidadeId, {
+  // Consultar os profissionais com base na especialidade
+  Ag_Profissional.findAll({
+    where: { cod_especialidade: especialidadeId },
     include: {
-      model: Profissional,
-      through: { attributes: [] } // Não incluir os dados da tabela de junção
-    }
+      model: Especialidade,
+      attributes: ["nome_especialidade"], // Incluir o nome da especialidade, se necessário
+    },
   })
-    .then((especialidade) => {
-      if (especialidade) {
-        res.status(status.OK).send(especialidade.Profissionais); // Enviar os profissionais dessa especialidade
+    .then((profissionais) => {
+      if (profissionais.length > 0) {
+        res.status(200).send(profissionais); // Enviar os profissionais dessa especialidade
       } else {
-        res.status(status.NOT_FOUND).send({ message: "Especialidade não encontrada" });
+        res.status(404).send({
+          message: "Nenhum profissional encontrado para esta especialidade",
+        });
       }
     })
     .catch((error) => next(error));
@@ -40,16 +50,18 @@ exports.getEspecialidadesPorProfissional = (req, res, next) => {
       model: Especialidade,
       include: {
         model: Procedimento, // Incluir também os procedimentos da especialidade
-        through: { attributes: [] }
+        through: { attributes: [] },
       },
-      through: { attributes: [] }
-    }
+      through: { attributes: [] },
+    },
   })
     .then((profissional) => {
       if (profissional) {
         res.status(status.OK).send(profissional.Especialidades); // Enviar especialidades com procedimentos
       } else {
-        res.status(status.NOT_FOUND).send({ message: "Profissional não encontrado" });
+        res
+          .status(status.NOT_FOUND)
+          .send({ message: "Profissional não encontrado" });
       }
     })
     .catch((error) => next(error));
@@ -61,21 +73,20 @@ exports.getProcedimentosPorEspecialidade = (req, res, next) => {
   Especialidade.findByPk(especialidadeId, {
     include: {
       model: Procedimento,
-      through: { attributes: [] } // Excluir os dados da tabela de junção
-    }
+      through: { attributes: [] }, // Excluir os dados da tabela de junção
+    },
   })
     .then((especialidade) => {
       if (especialidade) {
         res.status(status.OK).send(especialidade.Procedimentos); // Enviar os procedimentos dessa especialidade
       } else {
-        res.status(status.NOT_FOUND).send({ message: "Especialidade não encontrada" });
+        res
+          .status(status.NOT_FOUND)
+          .send({ message: "Especialidade não encontrada" });
       }
     })
     .catch((error) => next(error));
 };
-
-
-
 
 // Método para buscar todas as especialidades
 exports.getEspecialidades = (req, res, next) => {
@@ -115,4 +126,3 @@ exports.getAgProfissionais = (req, res, next) => {
     })
     .catch((error) => next(error));
 };
-

@@ -2,13 +2,12 @@ const Sequelize = require("sequelize");
 const sequelize = require("../database/database.js");
 
 const Especialidade = sequelize.define(
-  "especialidade",
+  "especialidades",
   {
     cod_especialidade: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING(3),
     },
     nome_especialidade: {
       allowNull: false,

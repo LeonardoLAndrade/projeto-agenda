@@ -20,7 +20,7 @@ const Procedimentos = sequelize.define(
     },
     cod_especialidade: {
       allowNull: false,
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING(3),
       references: {
         model: "especialidades", // nome da tabela de referência
         key: "cod_especialidade", // chave primária da tabela de referência
