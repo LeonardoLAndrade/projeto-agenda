@@ -45,19 +45,10 @@ exports.getProfissionaisPorEspecialidade = (req, res, next) => {
 exports.getEspecialidadesPorProfissional = (req, res, next) => {
   const profissionalId = req.params.profissionalId;
 
-  Profissional.findByPk(profissionalId, {
-    include: {
-      model: Especialidade,
-      include: {
-        model: Procedimento, // Incluir também os procedimentos da especialidade
-        through: { attributes: [] },
-      },
-      through: { attributes: [] },
-    },
-  })
+  Ag_Profissional.findByPk(profissionalId)
     .then((profissional) => {
       if (profissional) {
-        res.status(status.OK).send(profissional.Especialidades); // Enviar especialidades com procedimentos
+        res.status(status.OK).send(profissional.cod_especialidade); // Enviar especialidades com procedimentos
       } else {
         res
           .status(status.NOT_FOUND)
@@ -70,19 +61,21 @@ exports.getEspecialidadesPorProfissional = (req, res, next) => {
 exports.getProcedimentosPorEspecialidade = (req, res, next) => {
   const especialidadeId = req.params.especialidadeId;
 
-  Especialidade.findByPk(especialidadeId, {
+  // Consultar os profissionais com base na especialidade
+  Procedimento.findAll({
+    where: { cod_especialidade: especialidadeId },
     include: {
-      model: Procedimento,
-      through: { attributes: [] }, // Excluir os dados da tabela de junção
+      model: Especialidade,
+      attributes: ["nome_especialidade"], // Incluir o nome da especialidade, se necessário
     },
   })
-    .then((especialidade) => {
-      if (especialidade) {
-        res.status(status.OK).send(especialidade.Procedimentos); // Enviar os procedimentos dessa especialidade
+    .then((procedimentos) => {
+      if (procedimentos.length > 0) {
+        res.status(200).send(procedimentos); // Enviar os procedimentos dessa especialidade
       } else {
-        res
-          .status(status.NOT_FOUND)
-          .send({ message: "Especialidade não encontrada" });
+        res.status(404).send({
+          message: "Nenhum procedimento encontrado para esta especialidade",
+        });
       }
     })
     .catch((error) => next(error));

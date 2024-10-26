@@ -90,8 +90,105 @@ function Add({ onAdd }) {
             error
           )
         );
+      fetch(
+        `http://localhost:3003/sistema/especialidade/${especialidadeId}/procedimentos`
+      )
+        .then((response) => response.json())
+        .then((data) => setProcedimentosData(data))
+        .catch((error) =>
+          toast.error(
+            `Erro ao buscar procedimentos da especialidade ${especialidade.text}:`,
+            error
+          )
+        );
+    } else {
+      fetch("http://localhost:3003/sistema/ag_profissionais")
+        .then((response) => response.json())
+        .then((data) => setProfissionaisData(data))
+        .catch((error) =>
+          console.error("Erro ao buscar profissionais:", error)
+        );
+      fetch("http://localhost:3003/sistema/procedimentos")
+        .then((response) => response.json())
+        .then((data) => setProcedimentosData(data))
+        .catch((error) =>
+          console.error("Erro ao buscar procedimentos:", error)
+        );
     }
   }, [especialidade]);
+
+  useEffect(() => {
+    if (profissional.value) {
+      let especialidadeId = "";
+      profissionaisData.forEach((arrayAgProfissionais) => {
+        if (arrayAgProfissionais.id_profissional == profissional.value) {
+          especialidadeId = arrayAgProfissionais.cod_especialidade;
+        }
+      });
+      fetch(
+        `http://localhost:3003/sistema/especialidade/${especialidadeId}/procedimentos`
+      )
+        .then((response) => response.json())
+        .then((data) => setProcedimentosData(data))
+        .catch((error) =>
+          toast.error(
+            `Erro ao buscar procedimentos da especialidade ${especialidade.text}:`,
+            error
+          )
+        );
+    } else {
+      fetch("http://localhost:3003/sistema/especialidades")
+        .then((response) => response.json())
+        .then((data) => setEspecialidadesData(data))
+        .catch((error) =>
+          console.error("Erro ao buscar profissionais:", error)
+        );
+      fetch("http://localhost:3003/sistema/procedimentos")
+        .then((response) => response.json())
+        .then((data) => setProcedimentosData(data))
+        .catch((error) =>
+          console.error("Erro ao buscar procedimentos:", error)
+        );
+    }
+  }, [profissional]);
+
+  useEffect(() => {
+    console.log(especialidadesData);
+    console.log(especialidade);
+
+    if (procedimento.value) {
+      let especialidadeId = "";
+      procedimentosData.forEach((arrayProcedimentos) => {
+        if (arrayProcedimentos.id_procedimento == procedimento.value) {
+          especialidadeId = arrayProcedimentos.cod_especialidade;
+        }
+      });
+      fetch(
+        `http://localhost:3003/sistema/especialidade/${especialidadeId}/profissionais`
+      )
+        .then((response) => response.json())
+        .then((data) => setProfissionaisData(data))
+        .catch((error) =>
+          toast.error(
+            `Erro ao buscar profissionais da especialidade ${especialidade.text}:`,
+            error
+          )
+        );
+    } else {
+      fetch("http://localhost:3003/sistema/profissionais")
+        .then((response) => response.json())
+        .then((data) => setProfissionaisData(data))
+        .catch((error) =>
+          console.error("Erro ao buscar profissionais:", error)
+        );
+      fetch("http://localhost:3003/sistema/especialidades")
+        .then((response) => response.json())
+        .then((data) => setEspecialidadesData(data))
+        .catch((error) =>
+          console.error("Erro ao buscar procedimentos:", error)
+        );
+    }
+  }, [procedimento]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -258,8 +355,8 @@ function Add({ onAdd }) {
               </option>
               {especialidadesData.map((especialidade, index) => (
                 <option
-                  key={especialidade.id_especialidade || index}
-                  value={especialidade.id_especialidade}
+                  key={especialidade.cod_especialidade || index}
+                  value={especialidade.cod_especialidade}
                 >
                   {especialidade.nome_especialidade}
                 </option>
