@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Row, Col, Collapse } from "react-bootstrap";
 import { toast } from "react-toastify";
+import PropTypes from 'prop-types';
+
+Add.propTypes = {
+  onAdd: PropTypes.func.isRequired, // Verifica se `onAdd` é uma função e se é obrigatório
+};
+
 
 function Add({ onAdd }) {
   const [newEvent, setNewEvent] = useState({
@@ -28,7 +34,7 @@ function Add({ onAdd }) {
     fetch("http://localhost:3003/sistema/especialidades")
       .then((response) => response.json())
       .then((data) => setEspecialidadesData(data))
-      .catch((error) => console.error("Erro ao buscar especialidades:", error));
+      .catch((error) => console.error("Erro ao buscar especialidades:", error)); 
 
     fetch("http://localhost:3003/sistema/procedimentos")
       .then((response) => response.json())
@@ -40,7 +46,8 @@ function Add({ onAdd }) {
       .then((data) => setProfissionaisData(data))
       .catch((error) => console.error("Erro ao buscar profissionais:", error));
   }, []);
-
+ 
+  
   useEffect(() => {
     const generatedTitle = `${
       procedimento.text === "Procedimento"
@@ -184,9 +191,9 @@ function Add({ onAdd }) {
           setProfissional({ value: "", text: "" });
           toast.success("Evento adicionado com sucesso!");
         })
-        .catch((error) => {
-          toast.error("Erro ao adicionar evento.");
-        });
+          
+        .catch((error) => console.error("Erro ao adicionar evento.", error));
+          
     }
   };
 
