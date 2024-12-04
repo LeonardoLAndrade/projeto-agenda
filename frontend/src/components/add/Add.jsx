@@ -153,9 +153,6 @@ function Add({ onAdd }) {
   }, [profissional]);
 
   useEffect(() => {
-    console.log(especialidadesData);
-    console.log(especialidade);
-
     if (procedimento.value) {
       let especialidadeId = "";
       procedimentosData.forEach((arrayProcedimentos) => {

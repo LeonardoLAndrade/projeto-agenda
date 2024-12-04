@@ -26,7 +26,9 @@ function FiltroAtividades({ atividades, selecionarAtividades }) {
       selecionarAtividades(atividades);
     } else {
       const eventsFilter = atividades.filter((atividade) =>
-        tiposSelecionados.includes(atividade.profissional.nome_profissional)
+        tiposSelecionados.includes(
+          atividade?.ag_profissionai?.nome_profissional
+        )
       );
       selecionarAtividades(eventsFilter);
     }
