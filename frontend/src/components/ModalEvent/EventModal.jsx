@@ -48,7 +48,11 @@ const EventModal = ({ event, onClose, onDelete, onUpdate }) => {
           `http://localhost:3003/sistema/especialidade/${editedEvent.procedimento.cod_especialidade}/profissionais`
         );
         const data = await response.json();
-        setProfissionais(data);
+        setProfissionais(
+          data.sort((a, b) =>
+            a.nome_profissional.localeCompare(b.nome_profissional)
+          )
+        );
       } catch (error) {
         console.error("Erro ao buscar profissionais:", error);
       }

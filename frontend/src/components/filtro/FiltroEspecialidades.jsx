@@ -28,7 +28,6 @@ function FiltroEspecialidades({ atividades, selecionarAtividades }) {
   };
 
   useEffect(() => {
-    console.log(especialidades);
     if (tiposSelecionados.length === 0) {
       selecionarAtividades(atividades);
     } else {
