@@ -12,6 +12,8 @@ import EventModal from "../components/ModalEvent/EventModal";
 import Add from "../components/add/Add";
 import CustomToolbar from "../components/customCalendar/CustomToolbar";
 import FiltroAtividades from "../components/filtro/FiltroAtividades";
+import FiltroProcedimentos from "../components/filtro/FiltroProcedimentos";
+import FiltroEspecialidades from "../components/filtro/FiltroEspecialidades";
 
 const DragAndDropCalendar = withDragAndDrop(ReactCalendar);
 
@@ -255,6 +257,14 @@ function Calendar() {
       >
         <Add onAdd={handleAdd} />
         <FiltroAtividades
+          atividades={eventos}
+          selecionarAtividades={handleSelecionarAtividades}
+        />
+        <FiltroProcedimentos
+          atividades={eventos}
+          selecionarAtividades={handleSelecionarAtividades}
+        />
+        <FiltroEspecialidades
           atividades={eventos}
           selecionarAtividades={handleSelecionarAtividades}
         />

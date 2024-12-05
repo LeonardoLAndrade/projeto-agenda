@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 
-function FiltroAtividades({ atividades, selecionarAtividades }) {
-  const [profissionais, setProfissionais] = useState([]);
+function FiltroProcedimentos({ atividades, selecionarAtividades }) {
+  const [procedimentos, setProcedimentos] = useState([]);
   const [tiposSelecionados, setTiposSelecionados] = useState([]);
 
   useEffect(() => {
-    // Fetch profissionais do banco de dados
-    fetch("http://localhost:3003/sistema/ag_profissionais")
+    // Fetch procedimentos do banco de dados
+    fetch("http://localhost:3003/sistema/procedimentos")
       .then((response) => response.json())
       .then((data) => {
-        // Ordenar os profissionais em ordem alfabética
-        const sortedProfissionais = data.sort((a, b) =>
-          a.nome_profissional.localeCompare(b.nome_profissional)
+        // Ordenar os procedimentos em ordem alfabética
+        const sortedProcedimentos = data.sort((a, b) =>
+          a.procedimento.localeCompare(b.procedimento)
         );
-        setProfissionais(sortedProfissionais);
+        setProcedimentos(sortedProcedimentos);
       })
-      .catch((error) => console.error("Erro ao buscar profissionais:", error));
+      .catch((error) => console.error("Erro ao buscar procedimentos:", error));
   }, []);
 
   const toggleTipo = (tipo) => {
@@ -32,32 +32,28 @@ function FiltroAtividades({ atividades, selecionarAtividades }) {
       selecionarAtividades(atividades);
     } else {
       const eventsFilter = atividades.filter((atividade) =>
-        tiposSelecionados.includes(
-          atividade?.ag_profissionai?.nome_profissional
-        )
+        tiposSelecionados.includes(atividade?.procedimento?.procedimento)
       );
       selecionarAtividades(eventsFilter);
     }
   }, [tiposSelecionados, atividades]);
 
   return (
-    profissionais.length > 0 && (
+    procedimentos.length > 0 && (
       <div
         className="p-3 rounded border border-white mt-3"
         style={{ backgroundColor: "#E9ECEF", color: "#212529", margin: "20px" }}
       >
         <div>
-          <h5 style={{ marginBottom: "15px" }}>Filtro por Profissional</h5>
+          <h5 style={{ marginBottom: "15px" }}>Filtro por Procedimentos</h5>
         </div>
         <div className="ps-1" style={{ maxHeight: "25vh", overflowY: "auto" }}>
-          {profissionais.map((profissional) => (
+          {procedimentos.map((procedimento) => (
             <Form.Check
-              key={profissional.id_profissional}
-              label={profissional.nome_profissional}
-              checked={tiposSelecionados.includes(
-                profissional.nome_profissional
-              )}
-              onChange={() => toggleTipo(profissional.nome_profissional)}
+              key={procedimento.id_procedimento}
+              label={procedimento.procedimento}
+              checked={tiposSelecionados.includes(procedimento.procedimento)}
+              onChange={() => toggleTipo(procedimento.procedimento)}
               className="mr-3 mb-3"
             />
           ))}
@@ -73,4 +69,4 @@ function FiltroAtividades({ atividades, selecionarAtividades }) {
   );
 }
 
-export default FiltroAtividades;
+export default FiltroProcedimentos;

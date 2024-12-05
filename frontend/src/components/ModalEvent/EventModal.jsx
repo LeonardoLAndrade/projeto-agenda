@@ -45,10 +45,14 @@ const EventModal = ({ event, onClose, onDelete, onUpdate }) => {
     const fetchProfissionais = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3003/sistema/ag_profissionais"
+          `http://localhost:3003/sistema/especialidade/${editedEvent.procedimento.cod_especialidade}/profissionais`
         );
         const data = await response.json();
-        setProfissionais(data);
+        setProfissionais(
+          data.sort((a, b) =>
+            a.nome_profissional.localeCompare(b.nome_profissional)
+          )
+        );
       } catch (error) {
         console.error("Erro ao buscar profissionais:", error);
       }
@@ -63,7 +67,9 @@ const EventModal = ({ event, onClose, onDelete, onUpdate }) => {
     const especialidadeNome =
       editedEvent.procedimento?.especialidade?.nome_especialidade || "";
     const procedimentoNome = editedEvent.procedimento?.procedimento || "";
-    const profissionalNome = editedEvent.profissional?.nome_profissional || "";
+    const profissionalNome =
+      editedEvent.profissional?.nome_profissional ||
+      editedEvent.ag_profissionai?.nome_profissional;
 
     const generatedTitle = `${procedimentoNome} ${
       especialidadeNome ? `com ${especialidadeNome}` : ""
@@ -89,11 +95,19 @@ const EventModal = ({ event, onClose, onDelete, onUpdate }) => {
 
   const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);
+    if (isNaN(startDate.getTime())) {
+      toastify.error("Data de início inválida.");
+      return;
+    }
     setEditedEvent({ ...editedEvent, data_inicio: startDate });
   };
 
   const handleEndDateChange = (e) => {
     const endDate = new Date(e.target.value);
+    if (isNaN(endDate.getTime())) {
+      toastify.error("Data de término inválida.");
+      return;
+    }
     setEditedEvent({ ...editedEvent, data_fim: endDate });
   };
 

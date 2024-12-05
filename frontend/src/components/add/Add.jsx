@@ -21,25 +21,9 @@ function Add({ onAdd }) {
   const [profissional, setProfissional] = useState({ value: "", text: "" });
 
   const [especialidadesData, setEspecialidadesData] = useState([]);
+  const [fullEspecialidadesData, setFullEspecialidadesData] = useState([]);
   const [procedimentosData, setProcedimentosData] = useState([]);
   const [profissionaisData, setProfissionaisData] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:3003/sistema/especialidades")
-      .then((response) => response.json())
-      .then((data) => setEspecialidadesData(data))
-      .catch((error) => console.error("Erro ao buscar especialidades:", error));
-
-    fetch("http://localhost:3003/sistema/procedimentos")
-      .then((response) => response.json())
-      .then((data) => setProcedimentosData(data))
-      .catch((error) => console.error("Erro ao buscar procedimentos:", error));
-
-    fetch("http://localhost:3003/sistema/ag_profissionais")
-      .then((response) => response.json())
-      .then((data) => setProfissionaisData(data))
-      .catch((error) => console.error("Erro ao buscar profissionais:", error));
-  }, []);
 
   useEffect(() => {
     const generatedTitle = `${
@@ -72,123 +56,146 @@ function Add({ onAdd }) {
   }, [especialidade, procedimento, profissional]);
 
   useEffect(() => {
-    if (especialidade.value) {
-      let especialidadeId = "";
-      especialidadesData.forEach((arrayEspecialidade) => {
-        if (arrayEspecialidade.nome_especialidade == especialidade.text) {
-          especialidadeId = arrayEspecialidade.cod_especialidade;
-        }
-      });
-      fetch(
-        `http://localhost:3003/sistema/especialidade/${especialidadeId}/profissionais`
-      )
-        .then((response) => response.json())
-        .then((data) => setProfissionaisData(data))
-        .catch((error) =>
-          toast.error(
-            `Erro ao buscar profissionais da especialidade ${especialidade.text}:`,
-            error
-          )
-        );
-      fetch(
-        `http://localhost:3003/sistema/especialidade/${especialidadeId}/procedimentos`
-      )
-        .then((response) => response.json())
-        .then((data) => setProcedimentosData(data))
-        .catch((error) =>
-          toast.error(
-            `Erro ao buscar procedimentos da especialidade ${especialidade.text}:`,
-            error
-          )
-        );
-    } else {
-      fetch("http://localhost:3003/sistema/ag_profissionais")
-        .then((response) => response.json())
-        .then((data) => setProfissionaisData(data))
-        .catch((error) =>
-          console.error("Erro ao buscar profissionais:", error)
-        );
-      fetch("http://localhost:3003/sistema/procedimentos")
-        .then((response) => response.json())
-        .then((data) => setProcedimentosData(data))
-        .catch((error) =>
-          console.error("Erro ao buscar procedimentos:", error)
-        );
-    }
-  }, [especialidade]);
+    const atualizarDadosDependentes = async () => {
+      try {
+        let especialidades = fullEspecialidadesData || especialidadesData;
+        let procedimentos = procedimentosData;
+        let profissionais = profissionaisData;
 
-  useEffect(() => {
-    if (profissional.value) {
-      let especialidadeId = "";
-      profissionaisData.forEach((arrayAgProfissionais) => {
-        if (arrayAgProfissionais.id_profissional == profissional.value) {
-          especialidadeId = arrayAgProfissionais.cod_especialidade;
-        }
-      });
-      fetch(
-        `http://localhost:3003/sistema/especialidade/${especialidadeId}/procedimentos`
-      )
-        .then((response) => response.json())
-        .then((data) => setProcedimentosData(data))
-        .catch((error) =>
-          toast.error(
-            `Erro ao buscar procedimentos da especialidade ${especialidade.text}:`,
-            error
-          )
-        );
-    } else {
-      fetch("http://localhost:3003/sistema/especialidades")
-        .then((response) => response.json())
-        .then((data) => setEspecialidadesData(data))
-        .catch((error) =>
-          console.error("Erro ao buscar profissionais:", error)
-        );
-      fetch("http://localhost:3003/sistema/procedimentos")
-        .then((response) => response.json())
-        .then((data) => setProcedimentosData(data))
-        .catch((error) =>
-          console.error("Erro ao buscar procedimentos:", error)
-        );
-    }
-  }, [profissional]);
+        if (especialidade.value) {
+          const especialidadeId = especialidade.value;
 
-  useEffect(() => {
-    console.log(especialidadesData);
-    console.log(especialidade);
+          // Filtrar procedimentos e profissionais pela especialidade
+          const [procedimentosRes, profissionaisRes] = await Promise.all([
+            fetch(
+              `http://localhost:3003/sistema/especialidade/${especialidadeId}/procedimentos`
+            ).then((res) => res.json()),
+            fetch(
+              `http://localhost:3003/sistema/especialidade/${especialidadeId}/profissionais`
+            ).then((res) => res.json()),
+          ]);
 
-    if (procedimento.value) {
-      let especialidadeId = "";
-      procedimentosData.forEach((arrayProcedimentos) => {
-        if (arrayProcedimentos.id_procedimento == procedimento.value) {
-          especialidadeId = arrayProcedimentos.cod_especialidade;
+          procedimentos = procedimentosRes.sort((a, b) =>
+            a.procedimento.localeCompare(b.procedimento)
+          );
+          profissionais = profissionaisRes.sort((a, b) =>
+            a.nome_profissional.localeCompare(b.nome_profissional)
+          );
+
+          setProcedimentosData(procedimentos);
+          setProfissionaisData(profissionais);
+
+          if (procedimento.value) {
+            const procedimentoId = procedimento.value;
+            const procedimentoAssociado = procedimentosData.find(
+              (p) => Number(p.id_procedimento) === Number(procedimentoId)
+            );
+            const especialidadeId = procedimentoAssociado?.cod_especialidade;
+
+            if (especialidadeId !== especialidade.value) {
+              setProcedimento({ value: "", text: "" }); // Resetar procedimento
+            }
+          }
+          if (profissional.value) {
+            const profissionalId = profissional.value;
+            const profissionalAssociado = profissionaisData.find(
+              (p) => Number(p.id_profissional) === Number(profissionalId)
+            );
+            console.log(profissionalAssociado);
+            const especialidadeId = profissionalAssociado?.cod_especialidade;
+
+            if (especialidadeId !== especialidade.value) {
+              setProfissional({ value: "", text: "" }); // Resetar profissional
+            }
+          }
+        } else {
+          const [especialidadesRes, procedimentosRes, profissionaisRes] =
+            await Promise.all([
+              fetch(`http://localhost:3003/sistema/especialidades`).then(
+                (res) => res.json()
+              ),
+              fetch(`http://localhost:3003/sistema/procedimentos`).then((res) =>
+                res.json()
+              ),
+              fetch(`http://localhost:3003/sistema/ag_profissionais`).then(
+                (res) => res.json()
+              ),
+            ]);
+          especialidades = especialidadesRes.sort((a, b) =>
+            a.nome_especialidade.localeCompare(b.nome_especialidade)
+          );
+          procedimentos = procedimentosRes.sort((a, b) =>
+            a.procedimento.localeCompare(b.procedimento)
+          );
+          profissionais = profissionaisRes.sort((a, b) =>
+            a.nome_profissional.localeCompare(b.nome_profissional)
+          );
+
+          setEspecialidadesData(especialidades);
+          setProcedimentosData(procedimentos);
+          setProfissionaisData(profissionais);
+
+          if (fullEspecialidadesData.length === 0) {
+            setFullEspecialidadesData(especialidades);
+          }
         }
-      });
-      fetch(
-        `http://localhost:3003/sistema/especialidade/${especialidadeId}/profissionais`
-      )
-        .then((response) => response.json())
-        .then((data) => setProfissionaisData(data))
-        .catch((error) =>
-          toast.error(
-            `Erro ao buscar profissionais da especialidade ${especialidade.text}:`,
-            error
-          )
-        );
-    } else {
-      fetch("http://localhost:3003/sistema/profissionais")
-        .then((response) => response.json())
-        .then((data) => setProfissionaisData(data))
-        .catch((error) =>
-          console.error("Erro ao buscar profissionais:", error)
-        );
-      fetch("http://localhost:3003/sistema/especialidades")
-        .then((response) => response.json())
-        .then((data) => setEspecialidadesData(data))
-        .catch((error) =>
-          console.error("Erro ao buscar procedimentos:", error)
-        );
-    }
-  }, [procedimento]);
+
+        if (procedimento.value) {
+          const procedimentoId = procedimento.value;
+
+          // Identificar a especialidade associada ao procedimento e filtrar profissionais
+          const procedimentoAssociado = procedimentos.find(
+            (p) => Number(p.id_procedimento) === Number(procedimentoId)
+          );
+          const especialidadeId = procedimentoAssociado?.cod_especialidade;
+
+          if (especialidadeId) {
+            profissionais = await fetch(
+              `http://localhost:3003/sistema/especialidade/${especialidadeId}/profissionais`
+            ).then((res) => res.json());
+            especialidades = fullEspecialidadesData.filter(
+              (e) => e.cod_especialidade === especialidadeId
+            );
+            setEspecialidadesData(especialidades);
+            setProfissionaisData(
+              profissionais.sort((a, b) =>
+                a.nome_profissional.localeCompare(b.nome_profissional)
+              )
+            );
+          }
+        }
+
+        if (profissional.value) {
+          const profissionalId = profissional.value;
+
+          // Identificar a especialidade associada ao profissional e filtrar procedimentos
+          const profissionalAssociado = profissionaisData.find(
+            (p) => Number(p.id_profissional) === Number(profissionalId)
+          );
+          const especialidadeId = profissionalAssociado?.cod_especialidade;
+
+          if (especialidadeId) {
+            procedimentos = await fetch(
+              `http://localhost:3003/sistema/especialidade/${especialidadeId}/procedimentos`
+            ).then((res) => res.json());
+            especialidades = fullEspecialidadesData.filter(
+              (e) => e.cod_especialidade === especialidadeId
+            );
+            setEspecialidadesData(especialidades);
+            setProcedimentosData(
+              procedimentos.sort((a, b) =>
+                a.procedimento.localeCompare(b.procedimento)
+              )
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar dados dependentes:", error);
+      }
+    };
+
+    atualizarDadosDependentes();
+  }, [especialidade, procedimento, profissional]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -203,21 +210,38 @@ function Add({ onAdd }) {
     const value = e.currentTarget.value;
     const text = e.currentTarget.options[e.currentTarget.selectedIndex].text;
     setEspecialidade({ value, text });
-    setNewEvent((prev) => ({ ...prev, id_especialidade: value }));
+
+    if (!value) {
+      setEspecialidade({ value: "", text: "" });
+    } else {
+      setEspecialidade({ value, text });
+      setNewEvent((prev) => ({ ...prev, id_especialidade: value }));
+    }
   };
 
   const handleProcedimentoChange = (e) => {
     const value = e.currentTarget.value;
     const text = e.currentTarget.options[e.currentTarget.selectedIndex].text;
-    setProcedimento({ value, text });
-    setNewEvent((prev) => ({ ...prev, id_procedimento: value }));
+
+    if (!value) {
+      // Limpar dados dependentes ao retornar à opção padrão
+      setProcedimento({ value: "", text: "" });
+    } else {
+      setProcedimento({ value, text });
+      setNewEvent((prev) => ({ ...prev, id_procedimento: value }));
+    }
   };
 
   const handleProfissionalChange = (e) => {
     const value = e.currentTarget.value;
     const text = e.currentTarget.options[e.currentTarget.selectedIndex].text;
-    setProfissional({ value, text });
-    setNewEvent((prev) => ({ ...prev, id_profissional: value }));
+    if (!value) {
+      // Limpar dados dependentes ao retornar à opção padrão
+      setProfissional({ value: "", text: "" });
+    } else {
+      setProfissional({ value, text });
+      setNewEvent((prev) => ({ ...prev, id_profissional: value }));
+    }
   };
 
   const handleToggleExpanded = (e) => {
