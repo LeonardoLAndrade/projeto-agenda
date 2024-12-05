@@ -9,13 +9,7 @@ function FiltroAtividades({ atividades, selecionarAtividades }) {
     // Fetch profissionais do banco de dados
     fetch("http://localhost:3003/sistema/ag_profissionais")
       .then((response) => response.json())
-      .then((data) => {
-        // Ordenar os profissionais em ordem alfabética
-        const sortedProfissionais = data.sort((a, b) =>
-          a.nome_profissional.localeCompare(b.nome_profissional)
-        );
-        setProfissionais(sortedProfissionais);
-      })
+      .then((data) => setProfissionais(data))
       .catch((error) => console.error("Erro ao buscar profissionais:", error));
   }, []);
 

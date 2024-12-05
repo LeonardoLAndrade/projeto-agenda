@@ -9,13 +9,7 @@ function FiltroProcedimentos({ atividades, selecionarAtividades }) {
     // Fetch procedimentos do banco de dados
     fetch("http://localhost:3003/sistema/procedimentos")
       .then((response) => response.json())
-      .then((data) => {
-        // Ordenar os procedimentos em ordem alfabética
-        const sortedProcedimentos = data.sort((a, b) =>
-          a.procedimento.localeCompare(b.procedimento)
-        );
-        setProcedimentos(sortedProcedimentos);
-      })
+      .then((data) => setProcedimentos(data))
       .catch((error) => console.error("Erro ao buscar procedimentos:", error));
   }, []);
 
