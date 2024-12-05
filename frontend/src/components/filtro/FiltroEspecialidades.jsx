@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 
-function FiltroProcedimentos({ atividades, selecionarAtividades }) {
-  const [procedimentos, setProcedimentos] = useState([]);
+function FiltroEspecialidades({ atividades, selecionarAtividades }) {
+  const [especialidades, setEspecialidades] = useState([]);
   const [tiposSelecionados, setTiposSelecionados] = useState([]);
 
   useEffect(() => {
-    // Fetch procedimentos do banco de dados
-    fetch("http://localhost:3003/sistema/procedimentos")
+    // Fetch especialidades do banco de dados
+    fetch("http://localhost:3003/sistema/especialidades")
       .then((response) => response.json())
       .then((data) => {
-        // Ordenar os procedimentos em ordem alfabética
-        const sortedProcedimentos = data.sort((a, b) =>
-          a.procedimento.localeCompare(b.procedimento)
+        // Ordenar as especialidades em ordem alfabética
+        const sortedEspecialidades = data.sort((a, b) =>
+          a.nome_especialidade.localeCompare(b.nome_especialidade)
         );
-        setProcedimentos(sortedProcedimentos);
+        setEspecialidades(sortedEspecialidades);
       })
-      .catch((error) => console.error("Erro ao buscar procedimentos:", error));
+      .catch((error) => console.error("Erro ao buscar especialidades:", error));
   }, []);
 
   const toggleTipo = (tipo) => {
@@ -28,32 +28,37 @@ function FiltroProcedimentos({ atividades, selecionarAtividades }) {
   };
 
   useEffect(() => {
+    console.log(especialidades);
     if (tiposSelecionados.length === 0) {
       selecionarAtividades(atividades);
     } else {
       const eventsFilter = atividades.filter((atividade) =>
-        tiposSelecionados.includes(atividade?.procedimento?.procedimento)
+        tiposSelecionados.includes(
+          atividade?.procedimento?.especialidade?.nome_especialidade
+        )
       );
       selecionarAtividades(eventsFilter);
     }
   }, [tiposSelecionados, atividades]);
 
   return (
-    procedimentos.length > 0 && (
+    especialidades.length > 0 && (
       <div
         className="p-3 rounded border border-white mt-3"
         style={{ backgroundColor: "#E9ECEF", color: "#212529", margin: "20px" }}
       >
         <div>
-          <h5 style={{ marginBottom: "15px" }}>Filtro por Procedimentos</h5>
+          <h5 style={{ marginBottom: "15px" }}>Filtro por Especialidades</h5>
         </div>
         <div className="ps-1" style={{ maxHeight: "25vh", overflowY: "auto" }}>
-          {procedimentos.map((procedimento) => (
+          {especialidades.map((especialidade) => (
             <Form.Check
-              key={procedimento.id_procedimento}
-              label={procedimento.procedimento}
-              checked={tiposSelecionados.includes(procedimento.procedimento)}
-              onChange={() => toggleTipo(procedimento.procedimento)}
+              key={especialidade.cod_especialidade}
+              label={especialidade.nome_especialidade}
+              checked={tiposSelecionados.includes(
+                especialidade.nome_especialidade
+              )}
+              onChange={() => toggleTipo(especialidade.nome_especialidade)}
               className="mr-3 mb-3"
             />
           ))}
@@ -69,4 +74,4 @@ function FiltroProcedimentos({ atividades, selecionarAtividades }) {
   );
 }
 
-export default FiltroProcedimentos;
+export default FiltroEspecialidades;
