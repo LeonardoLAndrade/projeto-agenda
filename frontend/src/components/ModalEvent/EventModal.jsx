@@ -275,7 +275,7 @@ const EventModal = ({ event, onClose, onDelete, onUpdate }) => {
                 <Form.Select
                   aria-label="especialidade"
                   value={
-                    editedEvent.profissional?.especialidade?.cod_especialidade
+                    editedEvent.procedimento?.especialidade?.cod_especialidade
                   }
                   disabled
                 >
